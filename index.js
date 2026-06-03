@@ -1,4 +1,6 @@
 const express = require("express");
+const fs = require("node:fs").promises;
+const path = require("node:path");
 
 
 const app = express();
@@ -79,23 +81,37 @@ app.get("/api/saludo/:nombre", (req, res) => {
 
 //GET - LEER TODAS//
 
-app.get("/api/recetas", (req, res) => {
-    return res.status(200).json(recetas);
+app.get("/api/recetas", async(req, res) => {
+    try{
+        const recetas = await cargarRecetas();
+        return res.status(200).json(recetas);
+    }catch(error){
+        return res.status(500).json({ error: "Error de servidor"});
+    }
+    
 });
 
 
 
 //GET - LEER SOLO ID//
 
-app.get("/api/recetas/:id", (req, res) => {
-    const id = Number(req.params.id);
-    const receta = recetas.find((r) => r.id === id);
+app.get("/api/recetas/:id", async(req, res) => {
+    try{
+        const recetas = await cargarRecetas();
+        const idSearch = Number(req.params.id);
+        const receta = recetas.find((r) => r.id === id);
 
     if (!receta) {
         return res.status(404).json({ error: "Receta no encontrada" });
+
+    }
+    return res.json(receta);
+
+    }catch(error) {
+        return res.status(500).json({ error: "Error de servidor"});
     }
 
-    return res.json(receta);
+    
 });
 
 
@@ -104,48 +120,61 @@ app.get("/api/recetas/:id", (req, res) => {
 
 
 
-app.post("/api/recetas", (req, res) => {
-    console.log("Datos recibidos en el Body:", req.body);
+app.post("/api/recetas", async(req, res) => {
     const { Titulo, Ingredientes, Preparacion } = req.body;
     
     if (!Titulo || !Ingredientes || !Preparacion) {
     return res.status(400).json({ error: "Falta título,ingredientes o Preparacion" });
     }
+    try{
+        const recetas = await cargarRecetas();
+        const nuevoId = recetas.length + 1;
+        const nuevaReceta = { id: nuevoId, Titulo, Ingredientes, Preparacion };
+        recetas.push(nuevaReceta);
 
-    const nuevaReceta = {
-    id: recetas.length + 1,
-    Titulo,
-    Ingredientes,
-    Preparacion
-    };
-
-    recetas.push(nuevaReceta);
-    return res.status(201).json(nuevaReceta);
-
+        await guardarRecetas(recetas);
+        return res.status(201).json(nuevaReceta);
+    }catch(error) {
+        return res.status(500).json({ error: "Error interno al escribir el archivo" });
+    }
+    
 });
 
+    
 
 
 //PUT - REEMPLAZAR//
 
-app.put("/api/recetas/:id", (req, res) => {
+app.put("/api/recetas/:id", async (req, res) => {
     const idSearch = Number(req.params.id);
-    const indexFound = recetas.findIndex((receta) => receta.id === idSearch);
-
-    if(indexFound === -1) {
-        return res.status(404).json({ error: "Receta no encontrada para reemplazar"});
-    }
-
-    const {Titulo, Ingredientes, Preparacion } =req.body;
+    const { Titulo, Ingredientes, Preparacion } =req.body;
 
     if(!Titulo || !Ingredientes || !Preparacion) {
-        return res.status(400). json({ error: "Faltan campos obligatorios para el reemplazo completo"});
+        return res.status(400). json({ error: "Faltan campos obligatorios para el PUT"});
+    }
+
+
+    try{
+        const recetas = await cargarRecetas();
+        const indexFound = recetas.findIndex((receta) => receta.id === idSearch);
+    
+    if(indexFound === -1) {
+        return res.status(404).json({ error: "Receta no encontrada para reemplazar"});
+    
     }
 
     const recetaActualizada = { id: idSearch, Titulo, Ingredientes, Preparacion };
     recetas[indexFound] = recetaActualizada;
 
+    await guardarRecetas(recetas);
     return res.json(recetaActualizada);
+
+
+    } catch(error) {
+        return res.status(500).json({ error: "Error interno al actualizar el archivo "})
+
+    }
+
 });
 
 
@@ -156,20 +185,28 @@ app.put("/api/recetas/:id", (req, res) => {
 
 
 
-app.delete("/api/recetas/:id", (req, res) => {
+app.delete("/api/recetas/:id", async (req, res) => {
     const idSearch = Number(req.params.id);
-    const indexFound = recetas.findIndex((receta) => receta.id === idSearch);
+    
+    try {
+        const recetas = await cargarRecetas();
+        const indexFound = recetas.findIndex((receta) => receta.id === idSearch);
 
     if(indexFound === -1) {
         return res.status(404).json({ error: "Receta no encontrada para eliminar"});
     }
+
+        const [recetaBorrada] = recetas.splice(indexFound, 1);
+
+        await guardarRecetas(recetas);
+        return res.json({ mensaje: "Receta eliminada correctamente", recetaBorrada });
+
+    } catch(error) {
+        return res.status(500).json({ error: "Error interno al eliminar el archivo "});
+
+    }
     
-    const [recetaBorrada] = recetas.splice(indexFound, 1);
-    recetas.forEach((receta, index) => { receta.id = index + 1; });
-
-    return res.json({ mensaje: "Receta eliminada correctamente", recetaBorrada });
 });
-
 
 
 app.listen(PUERTO, () => {

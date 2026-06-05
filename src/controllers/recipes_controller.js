@@ -48,7 +48,7 @@ async function updateRecipe(req, res) {
     }
 
     try {
-        // CORREGIDO: Antes decía { title, director, release } que venía de otro proyecto ;)
+        
         const updated = await recipeModel.update(id, { title, ingredients, preparation });
         if (!updated) {
             return res.status(404).json({ error: "Receta no encontrada para reemplazar" });

@@ -1,5 +1,5 @@
 const express = require("express");
-const recipesRouter = require("./routes/recipes_route");
+const recipesRouter = require("./src/routes/recipes_route");
 const app = express();
 
 app.use(express.json());
@@ -17,5 +17,3 @@ app.get("/api/health", (req, res) => {
 app.use("/api/recipes", recipesRouter);
 
 module.exports = app;
-
-

@@ -2,9 +2,12 @@ const express = require("express");
 const recipesRouter = require("./routers/recipes_router");
 const app = express();
 const cors = require("cors"); 
+const authRouter = require("./routers/auth_router");
+
 
 app.use(cors());
 app.use(express.json());
+
 
 
 app.use((req, res, next) => {
@@ -18,5 +21,7 @@ app.get("/api/health", (req, res) => {
 
 
 app.use("/api/recipes", recipesRouter);
+app.use("/api/auth", authRouter);
+
 
 module.exports = app;

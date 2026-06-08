@@ -22,4 +22,29 @@ const register = async (req, res) => {
     }
 
 };
-module.exports = { register };
+
+const Login = async (req, res) => {
+    try{
+        const { email, password } = req.body;
+
+        const User = await User.findOne({ email });
+        if (!User) {
+            return res.status(401).json({ mensaje: "Credenciales incorrectas"});
+        }
+        const isMatch = await bcrypt.compare(password, User.password);
+        if (!isMatch) {
+            return res.status(401).json({ mensaje: "Credenciales incorrectas"});
+        }
+
+        res.status(200).json({
+            mensaje: "Login correcto", 
+            id: User._id,
+            email: User.email,
+        });
+    }catch (error) {
+        res.status(500). json({ mensaje: "Error en el Login"});
+    }
+};
+
+
+module.exports = { register, Login };

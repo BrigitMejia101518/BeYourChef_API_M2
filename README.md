@@ -8,11 +8,14 @@ BeYourChef es una API de recetas diseñada para que te conviertas en el chef de 
 
 ## Stack
 
-- Node.js + Express
-- MongoDB + Mongoose
-- JWT para autenticación
+- Node.js + Express.
+- MongoDB + Mongoose.
+- JWT para autenticación.
+- MongoDB Atlas.
 
 ## Estado
 
 🚧 En desarrollo — Sprint 1
+
 # BeYourChef_API_M2
+

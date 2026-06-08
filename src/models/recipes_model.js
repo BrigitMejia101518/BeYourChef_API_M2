@@ -1,15 +1,14 @@
 const mongoose = require("mongoose");
 const recipeSchema = new mongoose.Schema({
-    _id: { type: mongoose.Schema.Types.ObjectId, auto: true }, // Al ponerlo aquí, nacerá primero
     title: String,
     ingredients: String,
     preparation: String
 }, { timestamps: true });
 
-// Creamos el modelo. Mongo creará la colección automáticamente en plural: "recipes"
+
 const Recipe = mongoose.model("Recipe", recipeSchema);
 
-// FUNCIONES DE NEGOCIO (Hacen exactamente lo mismo, pero usando el modelo Recipe)
+
 async function getAll() {
   return await Recipe.find();
 }

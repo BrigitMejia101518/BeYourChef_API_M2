@@ -63,7 +63,6 @@ async function deleteRecipe(req, res) {
     const id = req.params.id;
 
     try {
-        // LLAMADA CORRECTA: Usamos el objeto 'recipeModel' y su método 'deleteRecipe'
         const deleted = await recipeModel.deleteRecipe(id);
         
         if (!deleted) {

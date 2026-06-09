@@ -1,5 +1,6 @@
 import bcrypt from "bcryptjs";
 import User from "../models/user_model.js";
+import jwt from "jsonwebtoken";
 
 export const register = async (req, res) => {
     try{
@@ -36,10 +37,13 @@ export const Login = async (req, res) => {
             return res.status(401).json({ mensaje: "Credenciales incorrectas"});
         }
 
+        const token = jwt.sign({ id: User._id }, process.env.    JWT_SECRET, {
+        expiresIn: "1h",
+        });
+
         res.status(200).json({
             mensaje: "Login correcto", 
-            id: user._id,
-            email: user.email
+            token,
         });
     }catch (error) {
         res.status(500). json({ mensaje: "Error en el Login"});

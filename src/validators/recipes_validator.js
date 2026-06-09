@@ -1,6 +1,6 @@
-const { body, param } = require ("express-validator");
+import { body, param } from "express-validator";
 
-const rulesCreateRecipe = [
+export const rulesCreateRecipe = [
     body("title")
         .notEmpty().withMessage("El título de la receta es obligatorio")
         .isLength({ min: 3 }).withMessage("El título debe tener al menos 3 caracteres"),
@@ -13,7 +13,7 @@ const rulesCreateRecipe = [
 ];
 
 
-const rulesUpdateRecipe = [
+export const rulesUpdateRecipe = [
     param("id").isMongoId().withMessage("El id no es válido"),
     body("title")
     .optional()
@@ -33,8 +33,3 @@ const rulesUpdateRecipe = [
 
 
 
-
-module.exports = {
-    rulesCreateRecipe,
-    rulesUpdateRecipe
-};

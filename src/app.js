@@ -1,9 +1,9 @@
-const express = require("express");
-const recipesRouter = require("./routers/recipes_router");
-const app = express();
-const cors = require("cors"); 
-const authRouter = require("./routers/auth_router");
+import express from "express";
+import recipesRouter from "./routers/recipes_router.js";
+import cors from "cors"; 
+import authRouter from "./routers/auth_router.js";
 
+const app = express();
 
 app.use(cors());
 app.use(express.json());
@@ -24,4 +24,4 @@ app.use("/api/recipes", recipesRouter);
 app.use("/api/auth", authRouter);
 
 
-module.exports = app;
+export default app;

@@ -1,7 +1,7 @@
 
-const recipeModel = require("../models/recipes_model");
+import * as recipeModel from "../models/recipes_model.js";
 
-async function getRecipes(req, res) {
+export async function getRecipes(req, res) {
     try {
         const recipes = await recipeModel.getAll();
         return res.status(200).json(recipes);
@@ -10,7 +10,7 @@ async function getRecipes(req, res) {
     }
 }
 
-async function getRecipe(req, res) {
+export async function getRecipe(req, res) {
     try {
         const id = req.params.id;
         const recipe = await recipeModel.getById(id);
@@ -24,7 +24,7 @@ async function getRecipe(req, res) {
     }
 }
 
-async function createRecipe(req, res) {
+export async function createRecipe(req, res) {
     const { title, ingredients, preparation } = req.body;
 
     if (!title || !ingredients || !preparation) {
@@ -39,7 +39,7 @@ async function createRecipe(req, res) {
     }
 }
 
-async function updateRecipe(req, res) {
+export async function updateRecipe(req, res) {
     const id = req.params.id;
     const { title, ingredients, preparation } = req.body;
 
@@ -59,7 +59,7 @@ async function updateRecipe(req, res) {
     }
 }
 
-async function deleteRecipe(req, res) {
+export async function deleteRecipe(req, res) {
     const id = req.params.id;
 
     try {
@@ -71,15 +71,7 @@ async function deleteRecipe(req, res) {
         
         return res.json({ mensaje: "Receta eliminada correctamente", deleted });
     } catch (error) {
-        console.error("Error real en la consola:", error); // Esto te dirá en la terminal si Mongoose protesta por otra cosa
+        console.error("Error real en la consola:", error); 
         return res.status(500).json({ error: "Error interno al borrar" });
     }
-}
-
-module.exports = {
-    getRecipes,
-    getRecipe,
-    createRecipe,
-    updateRecipe,
-    deleteRecipe
 };

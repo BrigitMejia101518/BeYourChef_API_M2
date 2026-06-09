@@ -1,9 +1,9 @@
 
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const recipesController = require("../controllers/recipes_controller");
-const validate = require("../middlewares/validate");
-const { rulesCreateRecipe, rulesUpdateRecipe} = require("../validators/recipes_validator")
+import * as recipesController from "../controllers/recipes_controller.js";
+import validate from "../middlewares/validate.js";
+import { rulesCreateRecipe, rulesUpdateRecipe} from "../validators/recipes_validator.js";
 
 
 
@@ -17,4 +17,4 @@ router.put("/:id", rulesUpdateRecipe, validate, recipesController.updateRecipe);
 router.delete("/:id", recipesController.deleteRecipe);
 
 
-module.exports = router;
+export default router;

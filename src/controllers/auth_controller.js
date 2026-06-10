@@ -1,4 +1,5 @@
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 import User from "../models/user_model.js";
 
 
@@ -25,7 +26,7 @@ export const register = async (req, res) => {
 
 };
 
-export const Login = async (req, res) => {
+export const login = async (req, res) => {
     try{
         const { email, password } = req.body;
 
@@ -38,9 +39,7 @@ export const Login = async (req, res) => {
             return res.status(401).json({ mensaje: "Credenciales incorrectas"});
         }
 
-        const token = jwt.sign({ id: User._id }, process.env.    JWT_SECRET, {
-        expiresIn: "1h",
-        });
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {expiresIn: "1h"});
 
         res.status(200).json({
             mensaje: "Login correcto", 
@@ -48,5 +47,21 @@ export const Login = async (req, res) => {
         });
     }catch (error) {
         res.status(500). json({ mensaje: "Error en el Login"});
+    }
+};
+
+export const getProfile = async (req, res) => {
+    try {
+        console.log(req.user);
+        const user = await User.findById(req.user.id).select("-password");
+
+        if (!user) {
+        return res.status(404).json({ mensaje: "Usuario no encontrado" });
+        }
+
+        res.status(200).json(user);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ mensaje: "Error al obtener el perfil" });
     }
 };

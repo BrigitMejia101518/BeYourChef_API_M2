@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import User from "../models/user_model.js";
-import jwt from "jsonwebtoken";
+
+
 
 export const register = async (req, res) => {
     try{
@@ -47,22 +48,5 @@ export const Login = async (req, res) => {
         });
     }catch (error) {
         res.status(500). json({ mensaje: "Error en el Login"});
-    }
-};
-
-export const quienSoy = (req, res) => {
-    try {
-        const authHeader = req.headers.authorization;
-        if (!authHeader) {
-        return res.status(401).json({ mensaje: "No hay token" });
-        }
-
-        const token = authHeader.split(" ")[1]; 
-
-        const user = jwt.verify(token, process.env.JWT_SECRET);
-
-        res.status(200).json({ mensaje: "Token válido", id: user.id });
-    } catch (error) {
-        res.status(401).json({ mensaje: "Token inválido o expirado" });
     }
 };

@@ -9,7 +9,5 @@ router.post("/register", rulesRegister, validate, authController.register);
 
 router.post("/login", rulesLogin, validate, authController.Login);
 
-router.get("/quien-soy", validate, authController.quienSoy);
-
 
 export default router;

@@ -65,3 +65,26 @@ export const getProfile = async (req, res) => {
         res.status(500).json({ mensaje: "Error al obtener el perfil" });
     }
 };
+
+export const addFavorite = async (req, res) => {
+    try {
+        const recipeId = req.params.recipeId;
+        const userId = req.user.id;
+
+        const userUpdated = await User.findByIdAndUpdate(
+            userId,
+                {$addToSet: { favorite: recipeId}},
+                {new: true}
+        ).select("-password");
+
+        if(!userUpdated) {
+            return res.status(404).json({ mensaje: "usuario no encontrado" });
+        }
+
+        return res.status(200).json(userUpdated);
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ mensaje: "Error al añadir la receta a favoritos" });
+    }
+};

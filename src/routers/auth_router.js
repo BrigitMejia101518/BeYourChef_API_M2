@@ -12,4 +12,6 @@ router.post("/login", rulesLogin, validate, authController.login);
 
 router.get("/profile", verifyToken, validate, authController.getProfile);
 
+router.post("/favorite/:recipeId", verifyToken, authController.addFavorite);
+
 export default router;

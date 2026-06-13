@@ -8,7 +8,7 @@ export const rulesCreateRecipe = [
     body("ingredients")
         .isArray({ min: 1 }).withMessage("Debes incluir al menos un ingrediente en un formato de lista (array)"),
         
-    body("instructions")
+    body("preparation")
         .notEmpty().withMessage("Las instrucciones de la receta son obligatorias")
 ];
 

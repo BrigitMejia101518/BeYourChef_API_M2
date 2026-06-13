@@ -14,7 +14,7 @@ router.post("/", verifyToken, rulesCreateRecipe, validate, recipesController.cre
 
 router.put("/:id", verifyToken, rulesUpdateRecipe, validate, recipesController.updateRecipe);
 
-router.delete("/:id", verifyToken, validate, recipesController.deleteRecipe);
+router.delete("/:id", verifyToken, recipesController.deleteRecipe);
 
 
 export default router;

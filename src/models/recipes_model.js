@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 
 const recipeSchema = new mongoose.Schema({
     title: String,
-    ingredients: String,
+    ingredients: [String],
     preparation: String
 }, { timestamps: true });
 
